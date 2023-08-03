@@ -42,8 +42,6 @@ document.addEventListener("DOMContentLoaded", function () {
     const selectedHorario = parseInt(horariosSelect.value);
     const selectedServicio = parseInt(serviciosSelect.value);
 
-    console.log(selectedDia, selectedHorario, selectedServicio);
-
     const filteredDoctores = doctores.filter(
       (doctor) =>
         doctor.diasTrabajo.includes(selectedDia) &&
