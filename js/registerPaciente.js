@@ -12,10 +12,21 @@ function saveFormData() {
   const email = document.getElementById("emailPaciente").value;
   const telefono = document.getElementById("telefonoPaciente").value;
   const password = document.getElementById("passwordPaciente").value;
+  const password2 = document.getElementById("confirmPasswordPaciente").value;
   const obraSocial = document.getElementById("obraSocialPaciente").value;
   const numeroAfiliado = document.getElementById(
     "numeroAfiliadoPaciente"
   ).value;
+
+  if (password!=password2) {
+    Swal.fire({
+      icon: "error",
+      title: "Password incorrecto",
+      showConfirmButton: false,
+      timer: 1500,
+    });
+    return;
+  }
 
   // Check if user is already registered as a Doctor
   const doctoresExistentes = JSON.parse(localStorage.getItem("Doctores")) || [];

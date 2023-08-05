@@ -12,6 +12,17 @@ document.addEventListener("DOMContentLoaded", function () {
     const especialidad = document.getElementById("especialidad").value;
     const matricula = document.getElementById("matricula").value;
     const password = document.getElementById("passwordDoctor").value;
+    const password2 = document.getElementById("confirmPasswordDoctor").value;
+
+    if (password!=password2) {
+      Swal.fire({
+        icon: "error",
+        title: "Password incorrecto",
+        showConfirmButton: false,
+        timer: 1500,
+      });
+      return;
+    }
 
     // Check if user is already registered as a Doctor
     const doctoresExistentes =
@@ -56,7 +67,7 @@ document.addEventListener("DOMContentLoaded", function () {
       });
 
     // Get horarios
-    const Horarios = [];
+    const Horarios = [];   
     document
       .querySelectorAll('input[name="horarios"]:checked')
       .forEach((checkbox) => {
