@@ -4,57 +4,34 @@ document.addEventListener("DOMContentLoaded", function () {
   const serviciosSelect = document.getElementById("servicios");
   const doctoresSelect = document.getElementById("doctores");
 
-  const doctores = [
-    {
-      nombre: "Luis Figueroa",
-      horarios: [1, 2, 3, 7, 8, 9, 10, 11],
-      servicios: [1, 2, 3, 6],
-      diasTrabajo: [0, 1, 2, 3, 4],
-    },
-    {
-      nombre: "Aaron Huetagoyena",
-      horarios: [1, 2, 3, 4, 5],
-      servicios: [4, 5, 6, 7],
-      diasTrabajo: [0, 2, 4, 5],
-    },
-    {
-      nombre: "Valentina Tincani",
-      horarios: [6, 7, 8, 9, 10, 11],
-      servicios: [1, 2, 3, 4, 5, 6],
-      diasTrabajo: [1, 3, 5],
-    },
-    {
-      nombre: "Francisco Giuoptionano",
-      horarios: [1, 2, 3, 4, 5],
-      servicios: [1, 2, 4, 5, 6],
-      diasTrabajo: [0, 1, 2, 3, 4],
-    },
-    {
-      nombre: "Leandro Meiners",
-      horarios: [1, 2, 3, 7, 8, 9, 10, 11],
-      servicios: [1, 3, 6, 7, 8],
-      diasTrabajo: [0, 1, 2, 4, 5],
-    },
-  ];
+  const doctoresExistentes = JSON.parse(localStorage.getItem("Doctores"));
+
+  console.log(doctoresExistentes);
 
   function updateDoctorList() {
     const selectedDia = new Date(diaSelect.value).getDay(); // Get day of the week (0-6)
     const selectedHorario = parseInt(horariosSelect.value);
     const selectedServicio = parseInt(serviciosSelect.value);
 
-    const filteredDoctores = doctores.filter(
-      (doctor) =>
-        doctor.diasTrabajo.includes(selectedDia) &&
-        doctor.horarios.includes(selectedHorario) &&
-        doctor.servicios.includes(selectedServicio)
-    );
+    const filteredDoctores = doctoresExistentes.filter((doctor) => {
+      const diasTrabajo = doctor.DiasTrabajo.map(Number); // Convert strings to numbers
+      const horarios = doctor.Horarios.map(Number); // Convert strings to numbers
+      const servicios = doctor.Servicios.map(Number); // Convert strings to numbers
+
+      return (
+        diasTrabajo.includes(selectedDia) &&
+        horarios.includes(selectedHorario) &&
+        servicios.includes(selectedServicio)
+      );
+    });
 
     doctoresSelect.innerHTML = "";
 
     filteredDoctores.forEach((doctor) => {
       const option = document.createElement("option");
-      option.value = doctor.nombre;
-      option.textContent = doctor.nombre;
+      const nombreApellido = `${doctor.nombre} ${doctor.apellido}`;
+      option.value = nombreApellido;
+      option.textContent = nombreApellido;
       doctoresSelect.appendChild(option);
     });
   }

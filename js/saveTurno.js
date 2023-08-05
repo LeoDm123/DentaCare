@@ -26,17 +26,17 @@ if (UsuarioLogeado) {
       servicios: serviciosInput.value,
       doctores: doctoresInput.value,
       motivo: motivoInput.value,
+      email: UsuarioLogeado.email,
     };
 
-    // Get existing user-specific turnos from local storage (if any)
-    let UsuarioTurnos =
-      JSON.parse(localStorage.getItem(UsuarioLogeado.email)) || [];
+    // Get existing turnos from local storage (if any)
+    let turnos = JSON.parse(localStorage.getItem("Turnos")) || [];
 
-    // Add the information of a new turno to existing user-specific turnos
-    UsuarioTurnos.push(turnoData);
+    // Add the information of a new turno to existing turnos
+    turnos.push(turnoData);
 
-    // Save the updated user-specific turnos back to local storage
-    localStorage.setItem(UsuarioLogeado.email, JSON.stringify(UsuarioTurnos));
+    // Save the updated turnos back to local storage
+    localStorage.setItem("Turnos", JSON.stringify(turnos));
 
     // Show success alert
     Swal.fire({

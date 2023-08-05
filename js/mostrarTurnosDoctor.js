@@ -7,11 +7,16 @@ document.addEventListener("DOMContentLoaded", () => {
   // Check if a user is logged in
   if (loggedInUser) {
     // Get the saved turnos data for the logged-in user from local storage
-    const userTurnosKey = loggedInUser.email;
+    const userTurnosKey = loggedInUser.nombre + " " + loggedInUser.apellido;
     const allTurnos = JSON.parse(localStorage.getItem("Turnos")) || [];
-    const userTurnos = allTurnos.filter(
-      (turno) => turno.email === userTurnosKey
+
+    // Filter turnos where loggedInUser is the doctor
+    const userDoctorTurnos = allTurnos.filter(
+      (turno) => turno.doctores === userTurnosKey
     );
+
+    console.log(loggedInUser.nombre && loggedInUser.apellido);
+    console.log(userDoctorTurnos);
 
     // Mapping arrays for services and hours
     const servicios = [
@@ -42,7 +47,7 @@ document.addEventListener("DOMContentLoaded", () => {
     ];
 
     // Loop through the saved turnos and create cards for each turno
-    userTurnos.forEach((turnoData, index) => {
+    userDoctorTurnos.forEach((turnoData, index) => {
       const cardDiv = document.createElement("div");
       cardDiv.classList.add("card", "w-100", "mb-3");
 
@@ -54,7 +59,7 @@ document.addEventListener("DOMContentLoaded", () => {
       cardTitle.textContent = `Turno ${index + 1}`;
 
       const cardContentDiv = document.createElement("div");
-      cardContentDiv.classList.add("d-flex", "align-items-center");
+      cardContentDiv.classList.add("d-flex");
 
       const contentLeftDiv = document.createElement("div");
       contentLeftDiv.classList.add("w-100");
@@ -146,16 +151,17 @@ document.addEventListener("DOMContentLoaded", () => {
       const contentRightDiv = document.createElement("div");
       contentRightDiv.classList.add("d-flex", "flex-column");
 
-      // Create the "Borrar" button
-      const borrarButton = document.createElement("a");
-      borrarButton.classList.add("btn", "btn-danger", "mb-2"); // Use the "btn-danger" class for a red button
-      borrarButton.href = "#";
-      borrarButton.innerHTML = '<i class="fas fa-trash-alt"></i> Borrar';
+      // Create the "Aceptar" button
+      const aceptarButton = document.createElement("a");
+      aceptarButton.classList.add("btn", "btn-primary", "mb-2");
+      aceptarButton.href = "#";
+      aceptarButton.innerHTML = '<i class="fas fa-check"></i> Aceptar';
 
-      borrarButton.addEventListener("click", () => {
+      aceptarButton.addEventListener("click", () => {
+        // Show a confirmation dialog
         Swal.fire({
-          title: "¿Estás seguro?",
-          text: "¡Este turno será eliminado permanentemente!",
+          title: "¿Confirmar turno?",
+          text: "¡Un mail de confirmación será enviado al paciente!",
           icon: "warning",
           showCancelButton: true,
           confirmButtonColor: "#3085d6",
@@ -164,25 +170,11 @@ document.addEventListener("DOMContentLoaded", () => {
           cancelButtonText: "Cancelar",
         }).then((result) => {
           if (result.isConfirmed) {
-            // Remove the turno from userTurnos array
-            userTurnos.splice(index, 1);
-
-            // Update user-specific turnos in local storage
-            localStorage.setItem(
-              "Turnos",
-              JSON.stringify(userTurnos) // Update to userTurnos instead of allTurnos
-            );
-
-            // Remove the card from the UI
-            cardDiv.remove();
-
-            // Close the modal (if needed)
-            // reservarModal.hide();
-
             // Show success alert
             Swal.fire({
               icon: "success",
-              title: "Turno eliminado exitosamente",
+              title: "Turno confirmado exitosamente",
+              text: "¡El paciente será debidamente informado!",
               showConfirmButton: false,
               timer: 1500,
             });
@@ -190,7 +182,64 @@ document.addEventListener("DOMContentLoaded", () => {
         });
       });
 
-      contentRightDiv.appendChild(borrarButton);
+      // Create the "Rechazar" button
+      const rechazarButton = document.createElement("a");
+      rechazarButton.classList.add("btn", "btn-danger", "mt-2");
+      rechazarButton.href = "#";
+      rechazarButton.innerHTML = '<i class="fas fa-times"></i> Rechazar';
+
+      rechazarButton.addEventListener("click", () => {
+        // Show a confirmation dialog
+        Swal.fire({
+          title: "¿Rechazar turno?",
+          text: "¡Un mail de notificación será enviado al paciente!",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "Sí, rechazar",
+          cancelButtonText: "Cancelar",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            // Find the index of the turno in the allTurnos array
+            const turnoIndex = allTurnos.findIndex(
+              (turno) => turno === turnoData
+            );
+
+            if (turnoIndex !== -1) {
+              // Remove the turno from allTurnos array
+              allTurnos.splice(turnoIndex, 1);
+
+              // Update user-specific turnos in local storage
+              localStorage.setItem("Turnos", JSON.stringify(allTurnos));
+
+              // Remove the card from the UI
+              cardDiv.remove();
+
+              // Show success alert
+              Swal.fire({
+                icon: "success",
+                title: "Turno rechazado exitosamente",
+                text: "¡El paciente será debidamente informado!",
+                showConfirmButton: false,
+                timer: 1500,
+              });
+            } else {
+              // Handle error (the turno was not found in allTurnos)
+              Swal.fire({
+                icon: "error",
+                title: "Error",
+                text: "No se pudo encontrar el turno en los registros.",
+                showConfirmButton: false,
+                timer: 1500,
+              });
+            }
+          }
+        });
+      });
+
+      contentRightDiv.appendChild(aceptarButton);
+      contentRightDiv.appendChild(rechazarButton);
 
       cardContentDiv.appendChild(contentLeftDiv);
       cardContentDiv.appendChild(contentRightDiv);

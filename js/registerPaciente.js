@@ -25,7 +25,6 @@ function saveFormData() {
 
   if (DoctorRegistrado) {
     Swal.fire({
-      position: "top-end",
       icon: "error",
       title: "El email ya está registrado como doctor",
       showConfirmButton: false,
@@ -43,7 +42,6 @@ function saveFormData() {
 
   if (PacienteRegistrado) {
     Swal.fire({
-      position: "top-end",
       icon: "error",
       title: "El email ya está registrado con otra cuenta",
       showConfirmButton: false,
@@ -70,7 +68,6 @@ function saveFormData() {
   localStorage.setItem("Pacientes", JSON.stringify(pacientesExistentes));
 
   Swal.fire({
-    position: "top-end",
     icon: "success",
     title: "Usuario registrado correctamente",
     showConfirmButton: false,

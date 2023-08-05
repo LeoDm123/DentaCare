@@ -22,7 +22,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (DoctorRegistrado) {
       Swal.fire({
-        position: "top-end",
         icon: "error",
         title: "El email ya está registrado con otra cuenta",
         showConfirmButton: false,
@@ -40,7 +39,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (PacienteRegistrado) {
       Swal.fire({
-        position: "top-end",
         icon: "error",
         title: "El email ya está registrado como paciente",
         showConfirmButton: false,
@@ -92,7 +90,6 @@ document.addEventListener("DOMContentLoaded", function () {
     localStorage.setItem("Doctores", JSON.stringify(doctoresExistentes));
 
     Swal.fire({
-      position: "top-end",
       icon: "success",
       title: "Usuario registrado correctamente",
       showConfirmButton: false,
