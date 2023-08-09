@@ -17,6 +17,25 @@ if (UsuarioLogeado) {
 
   // Add event listener to the "Reservar Turno" button
   reservarButton.addEventListener("click", () => {
+    // Check if the form is valid before proceeding
+    if (
+      !nombreInput.checkValidity() ||
+      !apellidoInput.checkValidity() ||
+      !fechaInput.checkValidity() ||
+      !horariosInput.checkValidity() ||
+      !serviciosInput.checkValidity() ||
+      !doctoresInput.checkValidity() ||
+      !motivoInput.checkValidity()
+    ) {
+      Swal.fire({
+        icon: "error",
+        title: "Por favor, complete todos los campos",
+        showConfirmButton: false,
+        timer: 1500,
+      });
+      return; // Don't proceed with submission if form is not valid
+    }
+
     // Create an object to store turno information
     const turnoData = {
       nombre: nombreInput.value,
@@ -27,6 +46,7 @@ if (UsuarioLogeado) {
       doctores: doctoresInput.value,
       motivo: motivoInput.value,
       email: UsuarioLogeado.email,
+      estado: 0,
     };
 
     // Get existing turnos from local storage (if any)
@@ -54,6 +74,10 @@ if (UsuarioLogeado) {
     serviciosInput.value = "0";
     doctoresInput.value = "0";
     motivoInput.value = "";
+
+    setTimeout(() => {
+      location.reload();
+    }, 1000);
   });
 } else {
   // Redirect to login page if no user is logged in

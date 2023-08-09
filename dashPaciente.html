@@ -181,6 +181,8 @@
                     class="form-control"
                     id="nombre"
                     placeholder="Nombre"
+                    maxlength="20"
+                    required
                   />
                   <label for="nombre">Nombre</label>
                 </div>
@@ -190,6 +192,8 @@
                     class="form-control"
                     id="apellido"
                     placeholder="Apellido"
+                    maxlength="20"
+                    required
                   />
                   <label for="nombre">Apellido</label>
                 </div>
@@ -203,7 +207,12 @@
                     >Seleccione la fecha</label
                   >
                   <div class="me-2">
-                    <input type="date" class="form-control" id="fecha" />
+                    <input
+                      type="date"
+                      class="form-control"
+                      id="fecha"
+                      required
+                    />
                   </div>
                 </div>
                 <div class="w-25 me-2 ms-2">
@@ -215,7 +224,7 @@
                     <label class="input-group-text form-control" for="horarios"
                       >Horarios</label
                     >
-                    <select class="form-select w-50" id="horarios">
+                    <select class="form-select w-50" id="horarios" required>
                       <option value="0">Seleccione el horario</option>
                       <option value="1">8:00 - 9:00</option>
                       <option value="2">9:00 - 10:00</option>
@@ -240,7 +249,7 @@
                     <label class="input-group-text form-control" for="servicios"
                       >Servicios</label
                     >
-                    <select class="form-select w-75" id="servicios">
+                    <select class="form-select w-75" id="servicios" required>
                       <option value="0">Seleccione el servicio</option>
                       <option value="1">Blanqueamiento</option>
                       <option value="2">Limpieza Bucal</option>
@@ -268,7 +277,7 @@
                       for="doctores"
                       >Doctor</label
                     >
-                    <select class="form-select w-75" id="doctores">
+                    <select class="form-select w-75" id="doctores" required>
                       <option value="0">Seleccione a su doctor</option>
                     </select>
                   </div>
@@ -290,7 +299,12 @@
                 >Motivo de la consulta</label
               >
               <div class="form-floating w-100 me-2">
-                <textarea class="form-control" id="motivo" rows="3"></textarea>
+                <textarea
+                  class="form-control"
+                  id="motivo"
+                  rows="3"
+                  required
+                ></textarea>
                 <label for="motivo"
                   >Explique brevemente el motivo de su consulta</label
                 >

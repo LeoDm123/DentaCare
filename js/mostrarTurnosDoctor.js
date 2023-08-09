@@ -151,95 +151,138 @@ document.addEventListener("DOMContentLoaded", () => {
       const contentRightDiv = document.createElement("div");
       contentRightDiv.classList.add("d-flex", "flex-column");
 
-      // Create the "Aceptar" button
-      const aceptarButton = document.createElement("a");
-      aceptarButton.classList.add("btn", "btn-primary", "mb-2");
-      aceptarButton.href = "#";
-      aceptarButton.innerHTML = '<i class="fas fa-check"></i> Aceptar';
+      if (turnoData.estado === 0) {
+        // Create the "Aceptar" button
+        const aceptarButton = document.createElement("a");
+        aceptarButton.classList.add("btn", "btn-primary", "mb-2");
+        aceptarButton.href = "#";
+        aceptarButton.innerHTML = '<i class="fas fa-check"></i> Aceptar';
 
-      aceptarButton.addEventListener("click", () => {
-        // Show a confirmation dialog
-        Swal.fire({
-          title: "¿Confirmar turno?",
-          text: "¡Un mail de confirmación será enviado al paciente!",
-          icon: "warning",
-          showCancelButton: true,
-          confirmButtonColor: "#3085d6",
-          cancelButtonColor: "#d33",
-          confirmButtonText: "Sí, borrar",
-          cancelButtonText: "Cancelar",
-        }).then((result) => {
-          if (result.isConfirmed) {
-            // Show success alert
-            Swal.fire({
-              icon: "success",
-              title: "Turno confirmado exitosamente",
-              text: "¡El paciente será debidamente informado!",
-              showConfirmButton: false,
-              timer: 1500,
-            });
-          }
-        });
-      });
+        aceptarButton.addEventListener("click", () => {
+          Swal.fire({
+            title: "¿Confirmar turno?",
+            text: "¡Un mail de confirmación será enviado al paciente!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Sí, confirmar",
+            cancelButtonText: "Cancelar",
+          }).then((result) => {
+            if (result.isConfirmed) {
+              // Find the index of the turno in the allTurnos array
+              const turnoIndex = allTurnos.findIndex(
+                (turno) => turno === turnoData
+              );
 
-      // Create the "Rechazar" button
-      const rechazarButton = document.createElement("a");
-      rechazarButton.classList.add("btn", "btn-danger", "mt-2");
-      rechazarButton.href = "#";
-      rechazarButton.innerHTML = '<i class="fas fa-times"></i> Rechazar';
+              if (turnoIndex !== -1) {
+                // Update the estado property of the turno
+                allTurnos[turnoIndex].estado = 1; // Assuming 1 represents confirmed state
 
-      rechazarButton.addEventListener("click", () => {
-        // Show a confirmation dialog
-        Swal.fire({
-          title: "¿Rechazar turno?",
-          text: "¡Un mail de notificación será enviado al paciente!",
-          icon: "warning",
-          showCancelButton: true,
-          confirmButtonColor: "#3085d6",
-          cancelButtonColor: "#d33",
-          confirmButtonText: "Sí, rechazar",
-          cancelButtonText: "Cancelar",
-        }).then((result) => {
-          if (result.isConfirmed) {
-            // Find the index of the turno in the allTurnos array
-            const turnoIndex = allTurnos.findIndex(
-              (turno) => turno === turnoData
-            );
+                // Update user-specific turnos in local storage
+                localStorage.setItem("Turnos", JSON.stringify(allTurnos));
 
-            if (turnoIndex !== -1) {
-              // Remove the turno from allTurnos array
-              allTurnos.splice(turnoIndex, 1);
-
-              // Update user-specific turnos in local storage
-              localStorage.setItem("Turnos", JSON.stringify(allTurnos));
-
-              // Remove the card from the UI
-              cardDiv.remove();
-
-              // Show success alert
-              Swal.fire({
-                icon: "success",
-                title: "Turno rechazado exitosamente",
-                text: "¡El paciente será debidamente informado!",
-                showConfirmButton: false,
-                timer: 1500,
-              });
-            } else {
-              // Handle error (the turno was not found in allTurnos)
-              Swal.fire({
-                icon: "error",
-                title: "Error",
-                text: "No se pudo encontrar el turno en los registros.",
-                showConfirmButton: false,
-                timer: 1500,
-              });
+                Swal.fire({
+                  icon: "success",
+                  title: "Turno confirmado exitosamente",
+                  text: "¡El paciente será debidamente informado!",
+                  showConfirmButton: false,
+                  timer: 1500,
+                }).then(() => {
+                  // Hide the buttons and show the green indicator
+                  aceptarButton.style.display = "none";
+                  rechazarButton.style.display = "none";
+                  const confirmedIndicator = document.createElement("p");
+                  confirmedIndicator.classList.add(
+                    "card-text",
+                    "text-success",
+                    "fw-semibold"
+                  );
+                  confirmedIndicator.textContent = "Turno confirmado";
+                  contentRightDiv.appendChild(confirmedIndicator);
+                });
+              } else {
+                Swal.fire({
+                  icon: "error",
+                  title: "Error",
+                  text: "No se pudo encontrar el turno en los registros.",
+                  showConfirmButton: false,
+                  timer: 1500,
+                });
+              }
             }
-          }
+          });
         });
-      });
 
-      contentRightDiv.appendChild(aceptarButton);
-      contentRightDiv.appendChild(rechazarButton);
+        // Create the "Rechazar" button
+        const rechazarButton = document.createElement("a");
+        rechazarButton.classList.add("btn", "btn-danger", "mt-2");
+        rechazarButton.href = "#";
+        rechazarButton.innerHTML = '<i class="fas fa-times"></i> Rechazar';
+
+        rechazarButton.addEventListener("click", () => {
+          // Show a confirmation dialog
+          Swal.fire({
+            title: "¿Rechazar turno?",
+            text: "¡Un mail de notificación será enviado al paciente!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Sí, rechazar",
+            cancelButtonText: "Cancelar",
+          }).then((result) => {
+            if (result.isConfirmed) {
+              // Find the index of the turno in the allTurnos array
+              const turnoIndex = allTurnos.findIndex(
+                (turno) => turno === turnoData
+              );
+
+              if (turnoIndex !== -1) {
+                // Remove the turno from allTurnos array
+                allTurnos.splice(turnoIndex, 1);
+
+                // Update user-specific turnos in local storage
+                localStorage.setItem("Turnos", JSON.stringify(allTurnos));
+
+                // Remove the card from the UI
+                cardDiv.remove();
+
+                // Show success alert
+                Swal.fire({
+                  icon: "success",
+                  title: "Turno rechazado exitosamente",
+                  text: "¡El paciente será debidamente informado!",
+                  showConfirmButton: false,
+                  timer: 1500,
+                });
+              } else {
+                // Handle error (the turno was not found in allTurnos)
+                Swal.fire({
+                  icon: "error",
+                  title: "Error",
+                  text: "No se pudo encontrar el turno en los registros.",
+                  showConfirmButton: false,
+                  timer: 1500,
+                });
+              }
+            }
+          });
+        });
+
+        contentRightDiv.appendChild(aceptarButton);
+        contentRightDiv.appendChild(rechazarButton);
+      } else if (turnoData.estado === 1) {
+        // Create and add the "Turno confirmado" indicator
+        const confirmedIndicator = document.createElement("p");
+        confirmedIndicator.classList.add(
+          "card-text",
+          "text-success",
+          "fw-semibold"
+        );
+        confirmedIndicator.textContent = "Turno confirmado";
+        contentRightDiv.appendChild(confirmedIndicator);
+      }
 
       cardContentDiv.appendChild(contentLeftDiv);
       cardContentDiv.appendChild(contentRightDiv);
