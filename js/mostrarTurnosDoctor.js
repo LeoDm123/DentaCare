@@ -149,7 +149,12 @@ document.addEventListener("DOMContentLoaded", () => {
       contentLeftDiv.appendChild(motivoDiv);
 
       const contentRightDiv = document.createElement("div");
-      contentRightDiv.classList.add("d-flex", "flex-column");
+      contentRightDiv.classList.add(
+        "d-flex",
+        "flex-column",
+        "align-items-center",
+        "justify-content-center"
+      );
 
       if (turnoData.estado === 0) {
         // Create the "Aceptar" button
